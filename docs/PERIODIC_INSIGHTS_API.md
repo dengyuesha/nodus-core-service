@@ -2,7 +2,7 @@
 
 ## 边界
 
-Core 只使用已经落库的结构化健康、财务记录，不读取图片、不执行 OCR。Core 负责周期边界、聚合、证据固定、结果持久化、反馈和重生成关系；AINAS 只做无状态文本生成，不保存业务数据。AINAS 或本地模型不可用时，Core 返回并保存标记为 `DETERMINISTIC/FALLBACK` 的事实摘要，不伪装为模型生成。
+Core 只使用已经落库的结构化健康、财务记录，不读取图片、不执行 OCR。Core 负责周期边界、聚合、证据固定、结果持久化、反馈和重生成关系；AINAS 只做无状态文本生成，不保存业务数据。AINAS 或本地模型不可用时，Core 返回并保存标记为 `DETERMINISTIC/FALLBACK` 的事实摘要，不伪装为模型生成。AINAS 调用失败后会进入 5 分钟冷却期，防止用户连续操作堆积本地推理请求。
 
 所有请求继续携带 `X-Nodus-Api-Key`、`X-Tenant-Id`、`X-User-Id`。自然周期按 `Asia/Shanghai` 计算，`periodEnd` 为右开边界，`dataCutoff` 是本轮实际使用的数据截止时间。
 
