@@ -50,7 +50,7 @@ public class JellyfinClient {
         }
         try {
             String query = "/Items?Recursive=true&Fields=Path&Limit=50&SearchTerm="
-                    + URLEncoder.encode(path.getFileName().toString(), StandardCharsets.UTF_8);
+                    + URLEncoder.encode(searchTerm(path), StandardCharsets.UTF_8);
             HttpResponse<String> response = httpClient.send(request(query).GET().build(), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() / 100 != 2) {
                 return Optional.empty();
@@ -65,6 +65,12 @@ public class JellyfinClient {
             return Optional.empty();
         }
         return Optional.empty();
+    }
+
+    static String searchTerm(Path path) {
+        String filename = path.getFileName().toString();
+        int extension = filename.lastIndexOf('.');
+        return extension > 0 ? filename.substring(0, extension) : filename;
     }
 
     public Optional<ImagePayload> poster(String itemId) {
