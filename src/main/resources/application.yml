@@ -33,7 +33,7 @@ management:
 info:
   app:
     name: nodus-core-service
-    phase: P0-foundation
+    phase: P3-periodic-insights
 
 nodus:
   core:
@@ -42,3 +42,7 @@ nodus:
     reminder-scan-interval: ${NODUS_CORE_REMINDER_SCAN_INTERVAL:1s}
     delivery-retry-delay: ${NODUS_CORE_DELIVERY_RETRY_DELAY:15s}
     delivery-lease: ${NODUS_CORE_DELIVERY_LEASE:30s}
+    insight-ainas-enabled: ${NODUS_CORE_INSIGHT_AINAS_ENABLED:false}
+    insight-ainas-base-url: ${NODUS_CORE_INSIGHT_AINAS_BASE_URL:http://127.0.0.1:8083}
+    insight-ainas-api-key: ${NODUS_CORE_INSIGHT_AINAS_API_KEY:}
+    insight-ainas-timeout: ${NODUS_CORE_INSIGHT_AINAS_TIMEOUT:90s}

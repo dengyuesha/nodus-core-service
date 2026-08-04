@@ -2,7 +2,7 @@
 
 Nodus 设备侧业务数据服务。该服务保存设备私有业务数据和持久任务状态，不承担公共工具执行，也不承担图片 OCR/识别。
 
-## 当前范围（P0 + P1）
+## 当前范围（P0—P3）
 
 - PostgreSQL + Flyway 数据库基线
 - 统一租户、用户、家庭、设备、会话和请求追踪上下文
@@ -14,10 +14,12 @@ Nodus 设备侧业务数据服务。该服务保存设备私有业务数据和�
 - 备忘录创建、查询、修改和软删除
 - 提醒创建、查询、取消、持久到期扫描、租约领取、失败重试和 ACK
 - 健康/财务已结构化记录的逐条校验、来源幂等导入、明细查询和阶段汇总
+- 周/月/季度洞察、证据链、反馈、追问和版本化重生成
 
-健康和财务图片由 IM/OCR 团队识别并生成结构化数据；后续 P2 只在本服务实现结构化数据的校验、幂等写入、查询和阶段性聚合。
+健康和财务图片由 IM/OCR 团队识别并生成结构化数据；本服务只实现结构化数据的校验、幂等写入、查询、阶段聚合和可追溯洞察。
 
 P2 对接合同见 [健康/财务结构化数据接口](docs/STRUCTURED_HEALTH_FINANCE_API.md)。
+P3 对接合同见 [阶段性洞察接口](docs/PERIODIC_INSIGHTS_API.md)。
 
 ## 本地验证
 
@@ -85,6 +87,14 @@ P2 主要接口：
 - `GET /api/v1/health/records`、`GET /api/v1/health/summary`
 - `POST /api/v1/finance/records/import`
 - `GET /api/v1/finance/records`、`GET /api/v1/finance/summary`
+
+P3 主要接口：
+
+- `POST /api/v1/insights/generate`
+- `GET /api/v1/insights`、`GET /api/v1/insights/{insightId}`
+- `POST /api/v1/insights/{insightId}/regenerate`
+- `POST /api/v1/insights/{insightId}/feedback`
+- `POST /api/v1/insights/{insightId}/questions`
 
 设备部署验证（2026-08-04）：Core 与 PostgreSQL 已部署在设备端，AINAS 已改为通过 Core 创建、查询、完成和删除备忘；定时提醒由 AINAS 租户级领取并发布既有 `reminder.due` 事件。真实 WebSocket 验证后，提醒与投递状态均进入 `ACKNOWLEDGED`。设备端旧 AINAS JSON 共 8 条已用旧记录 ID 派生的幂等键迁移，原目录及迁移前备份均保留；历史已过期时间不会补建提醒。
 
