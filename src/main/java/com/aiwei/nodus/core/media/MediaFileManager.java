@@ -132,7 +132,9 @@ public class MediaFileManager {
         Process process = new ProcessBuilder(
                 properties.ffprobePath(), "-v", "error", "-print_format", "json",
                 "-show_format", "-show_streams", file.toString())
-                .redirectErrorStream(true)
+                // Some ARM64 vendor libraries print linker warnings to stderr even when
+                // ffprobe succeeds. Never mix those diagnostics into the JSON stream.
+                .redirectError(ProcessBuilder.Redirect.DISCARD)
                 .start();
         boolean finished;
         try {
