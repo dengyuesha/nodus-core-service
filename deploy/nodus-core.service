@@ -1,0 +1,21 @@
+[Unit]
+Description=Nodus Core Business Data Service
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=aidlux
+Group=aidlux
+WorkingDirectory=/opt/nodus-core-service
+EnvironmentFile=/opt/nodus-core-service/nodus-core.env
+ExecStart=/usr/bin/java -XX:MaxRAMPercentage=60 -jar /opt/nodus-core-service/nodus-core-service.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
