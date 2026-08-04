@@ -14,6 +14,14 @@ nodus:
     reminder-scan-interval: 1h
     delivery-retry-delay: 10ms
     delivery-lease: 1s
+    media:
+      staging-directory: ./target/nodus-core-test-media/staging
+      movies-directory: ./target/nodus-core-test-media/Movies
+      shows-directory: ./target/nodus-core-test-media/TV
+      minimum-free-bytes: 1048576
+      maximum-library-bytes: 104857600
+      maximum-file-bytes: 52428800
+      verification-interval: 1h
 
 debug: false
 

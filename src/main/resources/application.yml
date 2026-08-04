@@ -33,7 +33,7 @@ management:
 info:
   app:
     name: nodus-core-service
-    phase: P3-periodic-insights
+    phase: P4-media-library
 
 nodus:
   core:
@@ -46,3 +46,15 @@ nodus:
     insight-ainas-base-url: ${NODUS_CORE_INSIGHT_AINAS_BASE_URL:http://127.0.0.1:8083}
     insight-ainas-api-key: ${NODUS_CORE_INSIGHT_AINAS_API_KEY:}
     insight-ainas-timeout: ${NODUS_CORE_INSIGHT_AINAS_TIMEOUT:90s}
+    media:
+      staging-directory: ${NODUS_MEDIA_STAGING_DIR:/home/aidlux/Videos/NodusMedia/staging}
+      movies-directory: ${NODUS_MEDIA_MOVIES_DIR:/home/aidlux/Videos/NodusMedia/Movies}
+      shows-directory: ${NODUS_MEDIA_SHOWS_DIR:/home/aidlux/Videos/NodusMedia/TV}
+      minimum-free-bytes: ${NODUS_MEDIA_MIN_FREE_BYTES:10737418240}
+      maximum-library-bytes: ${NODUS_MEDIA_MAX_LIBRARY_BYTES:10737418240}
+      maximum-file-bytes: ${NODUS_MEDIA_MAX_FILE_BYTES:8589934592}
+      ffprobe-path: ${NODUS_MEDIA_FFPROBE_PATH:/usr/bin/ffprobe}
+      verification-interval: ${NODUS_MEDIA_VERIFICATION_INTERVAL:2s}
+      jellyfin-base-url: ${NODUS_JELLYFIN_BASE_URL:http://127.0.0.1:8096}
+      jellyfin-api-key: ${NODUS_JELLYFIN_API_KEY:}
+      jellyfin-timeout: ${NODUS_JELLYFIN_TIMEOUT:5s}
