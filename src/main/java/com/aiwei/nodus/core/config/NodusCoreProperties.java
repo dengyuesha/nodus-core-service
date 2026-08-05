@@ -11,6 +11,7 @@ public record NodusCoreProperties(
         Duration reminderScanInterval,
         Duration deliveryRetryDelay,
         Duration deliveryLease,
+        String structuredDataUserId,
         boolean insightAinasEnabled,
         String insightAinasBaseUrl,
         String insightAinasApiKey,
@@ -22,6 +23,7 @@ public record NodusCoreProperties(
         reminderScanInterval = reminderScanInterval == null ? Duration.ofSeconds(1) : reminderScanInterval;
         deliveryRetryDelay = deliveryRetryDelay == null ? Duration.ofSeconds(15) : deliveryRetryDelay;
         deliveryLease = deliveryLease == null ? Duration.ofSeconds(30) : deliveryLease;
+        structuredDataUserId = structuredDataUserId == null ? "" : structuredDataUserId.trim();
         insightAinasBaseUrl = insightAinasBaseUrl == null ? "http://127.0.0.1:8083" : insightAinasBaseUrl;
         insightAinasApiKey = insightAinasApiKey == null ? "" : insightAinasApiKey;
         insightAinasTimeout = insightAinasTimeout == null ? Duration.ofSeconds(90) : insightAinasTimeout;

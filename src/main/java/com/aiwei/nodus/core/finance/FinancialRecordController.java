@@ -29,7 +29,7 @@ public class FinancialRecordController {
 
     @PostMapping("/records/import")
     public ImportBatchResponse importRecords(HttpServletRequest request, @RequestBody FinancialImportRequest body) {
-        return service.importRecords(contexts.resolve(request), body);
+        return service.importRecords(contexts.resolveStructuredDataImport(request), body);
     }
 
     @GetMapping("/records")

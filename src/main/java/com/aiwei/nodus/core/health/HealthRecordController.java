@@ -29,7 +29,7 @@ public class HealthRecordController {
 
     @PostMapping("/records/import")
     public ImportBatchResponse importRecords(HttpServletRequest request, @RequestBody HealthImportRequest body) {
-        return service.importRecords(contexts.resolve(request), body);
+        return service.importRecords(contexts.resolveStructuredDataImport(request), body);
     }
 
     @GetMapping("/records")

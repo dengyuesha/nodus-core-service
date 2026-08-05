@@ -42,6 +42,7 @@ nodus:
     reminder-scan-interval: ${NODUS_CORE_REMINDER_SCAN_INTERVAL:1s}
     delivery-retry-delay: ${NODUS_CORE_DELIVERY_RETRY_DELAY:15s}
     delivery-lease: ${NODUS_CORE_DELIVERY_LEASE:30s}
+    structured-data-user-id: ${NODUS_CORE_STRUCTURED_DATA_USER_ID:}
     insight-ainas-enabled: ${NODUS_CORE_INSIGHT_AINAS_ENABLED:false}
     insight-ainas-base-url: ${NODUS_CORE_INSIGHT_AINAS_BASE_URL:http://127.0.0.1:8083}
     insight-ainas-api-key: ${NODUS_CORE_INSIGHT_AINAS_API_KEY:}
