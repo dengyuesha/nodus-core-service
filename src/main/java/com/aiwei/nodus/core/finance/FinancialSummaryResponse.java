@@ -2,6 +2,7 @@ package com.aiwei.nodus.core.finance;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,11 @@ import java.util.Map;
 public record FinancialSummaryResponse(Instant from, Instant to, String currency,
         BigDecimal income, BigDecimal expense, BigDecimal netCashFlow, BigDecimal savingsRate,
         BigDecimal assets, BigDecimal liabilities, BigDecimal netWorth,
-        Map<String, BigDecimal> expenseByCategory, List<MonthlyCashFlow> monthlyCashFlow) {
+        Map<String, BigDecimal> expenseByCategory, List<DailyCashFlow> dailyCashFlow,
+        List<MonthlyCashFlow> monthlyCashFlow) {
+    public record DailyCashFlow(LocalDate date, BigDecimal income, BigDecimal expense,
+            BigDecimal netCashFlow) { }
+
     public record MonthlyCashFlow(YearMonth month, BigDecimal income, BigDecimal expense,
             BigDecimal netCashFlow) { }
 }

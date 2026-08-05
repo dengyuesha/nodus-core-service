@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -162,14 +163,24 @@ public class FinancialRecordService {
         rows.stream().filter(row -> "EXPENSE".equals(row.recordType())).forEach(row ->
                 categories.merge(blank(row.category()) ? "未分类" : row.category(), row.amount(), BigDecimal::add));
         Map<YearMonth, BigDecimal[]> months = new java.util.TreeMap<>();
+        Map<LocalDate, BigDecimal[]> days = new java.util.TreeMap<>();
         ZoneId zone = ZoneId.of("Asia/Shanghai");
         rows.stream().filter(row -> "INCOME".equals(row.recordType()) || "EXPENSE".equals(row.recordType()))
                 .forEach(row -> {
-                    YearMonth month = YearMonth.from(row.occurredAt().atZone(zone));
+                    var occurredAt = row.occurredAt().atZone(zone);
+                    YearMonth month = YearMonth.from(occurredAt);
                     BigDecimal[] values = months.computeIfAbsent(month, key -> new BigDecimal[] { BigDecimal.ZERO, BigDecimal.ZERO });
                     values["INCOME".equals(row.recordType()) ? 0 : 1] =
                             values["INCOME".equals(row.recordType()) ? 0 : 1].add(row.amount());
+                    LocalDate day = occurredAt.toLocalDate();
+                    BigDecimal[] dailyValues = days.computeIfAbsent(day,
+                            key -> new BigDecimal[] { BigDecimal.ZERO, BigDecimal.ZERO });
+                    dailyValues["INCOME".equals(row.recordType()) ? 0 : 1] =
+                            dailyValues["INCOME".equals(row.recordType()) ? 0 : 1].add(row.amount());
                 });
+        List<FinancialSummaryResponse.DailyCashFlow> daily = days.entrySet().stream()
+                .map(entry -> new FinancialSummaryResponse.DailyCashFlow(entry.getKey(), entry.getValue()[0],
+                        entry.getValue()[1], entry.getValue()[0].subtract(entry.getValue()[1]))).toList();
         List<FinancialSummaryResponse.MonthlyCashFlow> monthly = months.entrySet().stream()
                 .map(entry -> new FinancialSummaryResponse.MonthlyCashFlow(entry.getKey(), entry.getValue()[0],
                         entry.getValue()[1], entry.getValue()[0].subtract(entry.getValue()[1]))).toList();
@@ -178,7 +189,7 @@ public class FinancialRecordService {
                         .divide(income, 2, RoundingMode.HALF_UP);
         return new FinancialSummaryResponse(effectiveFrom, effectiveTo, effectiveCurrency, income, expense,
                 income.subtract(expense), savingsRate, assets, liabilities, assets.subtract(liabilities),
-                categories, monthly);
+                categories, daily, monthly);
     }
 
     private BigDecimal sum(List<FinancialRecordResponse> rows, String type) {

@@ -89,6 +89,8 @@ class StructuredDataIntegrationTest {
                 .andExpect(jsonPath("$.assets").value(90000))
                 .andExpect(jsonPath("$.liabilities").value(20000))
                 .andExpect(jsonPath("$.netWorth").value(70000))
+                .andExpect(jsonPath("$.dailyCashFlow[0].expense").value(2500))
+                .andExpect(jsonPath("$.dailyCashFlow[0].netCashFlow").value(7500))
                 .andExpect(jsonPath("$.expenseByCategory.交通").value(2500));
     }
 
