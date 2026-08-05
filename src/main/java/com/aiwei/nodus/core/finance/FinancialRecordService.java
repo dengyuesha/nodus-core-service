@@ -34,6 +34,14 @@ import com.aiwei.nodus.core.ingestion.ImportItemResult;
 @Service
 public class FinancialRecordService {
     private static final Set<String> TYPES = Set.of("INCOME", "EXPENSE", "ASSET_BALANCE", "LIABILITY_BALANCE");
+    private static final Map<String, String> CATEGORY_NAMES = Map.ofEntries(
+            Map.entry("FOOD", "餐饮"), Map.entry("DINING", "餐饮"),
+            Map.entry("TRANSPORT", "交通"), Map.entry("TRANSPORTATION", "交通"),
+            Map.entry("SHOPPING", "购物"), Map.entry("SALARY", "工资"),
+            Map.entry("HOUSING", "住房"), Map.entry("UTILITIES", "水电煤"),
+            Map.entry("ENTERTAINMENT", "娱乐"), Map.entry("HEALTHCARE", "医疗"),
+            Map.entry("EDUCATION", "教育"), Map.entry("TRAVEL", "旅行"),
+            Map.entry("INSURANCE", "保险"), Map.entry("OTHER", "其他"));
     private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() { };
     private final JdbcTemplate jdbc;
     private final ObjectMapper mapper;
@@ -77,12 +85,13 @@ public class FinancialRecordService {
                 "FINANCIAL_RECORD_INVALID", error);
         String type = input.recordType().trim().toUpperCase(Locale.ROOT);
         String currency = input.currency().trim().toUpperCase(Locale.ROOT);
+        String category = normalizeCategory(input.category());
         Map<String, Object> canonical = new LinkedHashMap<>();
         canonical.put("sourceRecordId", input.sourceRecordId().trim());
         canonical.put("recordType", type);
         canonical.put("amount", input.amount());
         canonical.put("currency", currency);
-        canonical.put("category", trim(input.category()));
+        canonical.put("category", category);
         canonical.put("account", trim(input.account()));
         canonical.put("description", trim(input.description()));
         canonical.put("occurredAt", input.occurredAt());
@@ -103,7 +112,7 @@ public class FinancialRecordService {
                     metadata, content_hash, created_at, updated_at)
                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, id, context.tenantId(), context.userId(), source, input.sourceRecordId().trim(),
-                type, input.amount(), currency, trim(input.category()), trim(input.account()),
+                type, input.amount(), currency, category, trim(input.account()),
                 trim(input.description()), Timestamp.from(input.occurredAt()), json(input.metadata()), hash,
                 Timestamp.from(now), Timestamp.from(now));
         audit.append(context, "FINANCIAL_RECORD_IMPORTED", "financial_record", id.toString(),
@@ -218,5 +227,11 @@ public class FinancialRecordService {
 
     private boolean blank(String value) { return value == null || value.isBlank(); }
     private String trim(String value) { return blank(value) ? null : value.trim(); }
+    private String normalizeCategory(String value) {
+        String category = trim(value);
+        if (category == null) return null;
+        String code = category.toUpperCase(Locale.ROOT).replace('-', '_').replace(' ', '_');
+        return CATEGORY_NAMES.getOrDefault(code, category);
+    }
     private record Existing(UUID id, String hash) { }
 }

@@ -65,7 +65,7 @@ class StructuredDataIntegrationTest {
                   {"sourceRecordId":"income-1","recordType":"INCOME","amount":10000,"currency":"CNY",
                    "category":"工资","occurredAt":"%s"},
                   {"sourceRecordId":"expense-1","recordType":"EXPENSE","amount":2500,"currency":"CNY",
-                   "category":"餐饮","occurredAt":"%s"},
+                   "category":"TRANSPORTATION","occurredAt":"%s"},
                   {"sourceRecordId":"asset-old","recordType":"ASSET_BALANCE","amount":80000,"currency":"CNY",
                    "account":"银行卡","occurredAt":"%s"},
                   {"sourceRecordId":"asset-new","recordType":"ASSET_BALANCE","amount":90000,"currency":"CNY",
@@ -89,7 +89,7 @@ class StructuredDataIntegrationTest {
                 .andExpect(jsonPath("$.assets").value(90000))
                 .andExpect(jsonPath("$.liabilities").value(20000))
                 .andExpect(jsonPath("$.netWorth").value(70000))
-                .andExpect(jsonPath("$.expenseByCategory.餐饮").value(2500));
+                .andExpect(jsonPath("$.expenseByCategory.交通").value(2500));
     }
 
     private org.springframework.test.web.servlet.ResultActions perform(
